@@ -1,11 +1,46 @@
+[project]
+name = "autotest"
+version = "0.1.0"
+description = "Automated testing project"
+authors = [
+    { name = "YJYHY", email = "yujintn22@gmail.com" }
+]
+
+
+# 新增package_dir映射
 [build-system]
-requires = ["setuptools>=42.0", "wheel"]
+requires = [
+    "setuptools>=42.0",
+    "wheel",
+    "django>=4.2",
+    "pytest-django>=4.5"
+]
 build-backend = "setuptools.build_meta"
 
+# 新增setuptools配置
+[tool.setuptools]
+package-dir = {"" = "function"}  # 将根包映射到function目录
+
+[tool.setuptools.packages.find]
+where = ["function"]  # 指定查找包的根目录
+include = ["excel_to_unittest*"]  # 包含所有子包
+
+
 [tool.pytest.ini_options]
-addopts = "--cov=src/register"  # 确保覆盖率收集的是src/login目录下的代码
-testpaths = [
-    "tests",
+django_find_project = false  # 关闭自动查找Django项目
+addopts = [
+    "-v",
+    "--html=report.html",
+    "--cov=src",
+    "--cov=testplatform",
+    "--cov-report=html",
+    "--ds=config.settings"
+]
+testpaths = ["testplatform/tests"]  # 指定测试路径
+markers = [
+    "unit: mark as unit test",
+    "integration: mark as integration test",
+    "functional: mark as functional test"
 ]
 
 [tool.mypy]
@@ -21,3 +56,7 @@ warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
 no_implicit_reexport = true
+
+# 添加脚本，用于生成测试用例
+[project.scripts]
+generate-tests = "function.excel_to_unittest.generate_tests:main"
