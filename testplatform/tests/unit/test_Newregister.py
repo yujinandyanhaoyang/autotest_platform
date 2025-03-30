@@ -1,6 +1,6 @@
 import requests
 import unittest
-
+# -*- coding: utf-8 -*-
 class TestNewregister(unittest.TestCase):
     def test_register_sucess_001(self):
         response = requests.get('http://127.0.0.1:8000/home/api/register/', params= { "username": "userfour",

@@ -1,6 +1,6 @@
 import requests
 import unittest
-
+# -*- coding: utf-8 -*-
 class TestAddgroup(unittest.TestCase):
     def test_addgroup_sucess_001(self):
         response = requests.get('http://127.0.0.1:8000/home/api/groups/addgroup/', params={
