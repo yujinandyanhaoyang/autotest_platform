@@ -1,9 +1,9 @@
 import requests
 import unittest
-# -*- coding: utf-8 -*-
+
 class TestAddgroup(unittest.TestCase):
     def test_addgroup_sucess_001(self):
-        response = requests.get('http://127.0.0.1:8000/home/api/groups/addgroup/', params={
+        response = requests.post('http://127.0.0.1:8000/home/api/groups/addgroup/', json={
   "name": "Python 学习小组",
   "description": "这是一个学习 Python 的小组。",
   "created_by": 1 
@@ -15,7 +15,7 @@ class TestAddgroup(unittest.TestCase):
 })
 
     def test_addgroup_failure_001(self):
-        response = requests.get('http://127.0.0.1:8000/home/api/groups/addgroup/', params={
+        response = requests.post('http://127.0.0.1:8000/home/api/groups/addgroup/', json={
   "name": "Python 学习小组",
   "description": "这是一个学习 Python 的小组。",
   "created_by": 3  
@@ -27,7 +27,7 @@ class TestAddgroup(unittest.TestCase):
 })
 
     def test_addgroup_failure_002(self):
-        response = requests.get('http://127.0.0.1:8000/home/api/groups/addgroup/', params={
+        response = requests.post('http://127.0.0.1:8000/home/api/groups/addgroup/', json={
   "description": "这是一个学习 Python 的小组。",
   "created_by": 1  
 })
@@ -38,7 +38,7 @@ class TestAddgroup(unittest.TestCase):
 })
 
     def test_addgroup_failure_003(self):
-        response = requests.get('http://127.0.0.1:8000/home/api/groups/addgroup/', params={
+        response = requests.post('http://127.0.0.1:8000/home/api/groups/addgroup/', json={
   "name": "Python 学习小组",
   "created_by": 1 
 })
@@ -49,7 +49,7 @@ class TestAddgroup(unittest.TestCase):
 })
 
     def test_addgroup_failure_004(self):
-        response = requests.get('http://127.0.0.1:8000/home/api/groups/addgroup/', params={
+        response = requests.post('http://127.0.0.1:8000/home/api/groups/addgroup/', json={
   "name": "Python 学习小组",
   "description": "这是一个学习 Python 的小组。",
 })

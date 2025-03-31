@@ -1,9 +1,9 @@
 import requests
 import unittest
-# -*- coding: utf-8 -*-
+
 class TestNewregister(unittest.TestCase):
     def test_register_sucess_001(self):
-        response = requests.get('http://127.0.0.1:8000/home/api/register/', params= { "username": "userfour",
+        response = requests.post('http://127.0.0.1:8000/home/api/register/', json= { "username": "userfour",
   "email": "user.four@example.com",
   "password": "anotherPass123"})
         self.assertEqual(response.status_code, 201)
@@ -13,7 +13,7 @@ class TestNewregister(unittest.TestCase):
 })
 
     def test_register_failure_001(self):
-        response = requests.get('http://127.0.0.1:8000/home/api/register/', params= { 
+        response = requests.post('http://127.0.0.1:8000/home/api/register/', json= { 
   "email": "user.four1@example.com",
   "password": "anotherPass124"})
         self.assertEqual(response.status_code, 400)
@@ -23,7 +23,7 @@ class TestNewregister(unittest.TestCase):
 })
 
     def test_register_failure_002(self):
-        response = requests.get('http://127.0.0.1:8000/home/api/register/', params= { "username": "userfour",
+        response = requests.post('http://127.0.0.1:8000/home/api/register/', json= { "username": "userfour",
   "password": "anotherPass125"})
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
@@ -32,7 +32,7 @@ class TestNewregister(unittest.TestCase):
 })
 
     def test_register_failure_004(self):
-        response = requests.get('http://127.0.0.1:8000/home/api/register/', params= { "username": "userfour",
+        response = requests.post('http://127.0.0.1:8000/home/api/register/', json= { "username": "userfour",
   "email": "user.four1@example.com",
 })
         self.assertEqual(response.status_code, 400)
@@ -42,7 +42,7 @@ class TestNewregister(unittest.TestCase):
 })
 
     def test_register_failure_005(self):
-        response = requests.get('http://127.0.0.1:8000/home/ahttp://127.0.0.1:8000/home/api/register/pi/register/', params= { "username": "userfour",
+        response = requests.post('http://127.0.0.1:8000/home/ahttp://127.0.0.1:8000/home/api/register/pi/register/', json= { "username": "userfour",
   "email": "user.four@example.com",
   "password": "anotherPass128"})
         self.assertEqual(response.status_code, 400)

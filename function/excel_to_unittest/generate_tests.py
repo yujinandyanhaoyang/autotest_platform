@@ -1,3 +1,4 @@
+
 import argparse
 import pandas as pd
 from pathlib import Path
@@ -6,8 +7,8 @@ def generate_test_file(sheet_name, df, output_dir: Path):
     test_file_name = f"test_{sheet_name.replace('/', '_')}.py"
     test_file_path = output_dir / test_file_name
 
-    # 添加列名校验
-    required_columns = ['test_title', 'url', 'test_data', 'request_json', 'status']
+    # 更新列名校验
+    required_columns = ['test_title', 'test_method', 'url', 'test_data', 'request_json', 'status']
     if not all(col in df.columns for col in required_columns):
         raise ValueError(f"Excel sheet {sheet_name} 缺少必需列：{required_columns}")
 
@@ -17,13 +18,20 @@ def generate_test_file(sheet_name, df, output_dir: Path):
 
         for index, row in df.iterrows():
             test_title = row['test_title']
+            test_method = row['test_method'].lower()  # 转换为小写，方便比较
             url = row['url']
             test_data = row['test_data']
             request_json = row['request_json']
             status = row['status']
 
             f.write(f"    def test_{test_title.replace(' ', '_')}(self):\n")
-            f.write(f"        response = requests.get('{url}', params={test_data})\n")
+            if test_method == 'get':
+                f.write(f"        response = requests.get('{url}', params={test_data})\n")
+            elif test_method == 'post':
+                f.write(f"        response = requests.post('{url}', json={test_data})\n")
+            else:
+                f.write(f"        raise ValueError(f'不支持的请求方法: {{test_method}}')\n")
+
             f.write(f"        self.assertEqual(response.status_code, {status})\n")
             f.write(f"        self.assertEqual(response.json(), {request_json})\n\n")
 

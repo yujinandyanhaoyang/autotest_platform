@@ -1,9 +1,9 @@
 import requests
 import unittest
-# -*- coding: utf-8 -*-
+
 class TestLogin(unittest.TestCase):
     def test_login_sucess_001(self):
-        response = requests.get('http://127.0.0.1:8000/home/api/login/', params={
+        response = requests.post('http://127.0.0.1:8000/home/api/login/', json={
     "username_or_email": "testuser",
     "password": "testpassword"
 })
@@ -14,7 +14,7 @@ class TestLogin(unittest.TestCase):
 })
 
     def test_login_failure_001(self):
-        response = requests.get('http://127.0.0.1:8000/home/api/login/', params={
+        response = requests.post('http://127.0.0.1:8000/home/api/login/', json={
     "password": "testpassword"
 })
         self.assertEqual(response.status_code, 400)
@@ -24,7 +24,7 @@ class TestLogin(unittest.TestCase):
 })
 
     def test_login_failure_002(self):
-        response = requests.get('http://127.0.0.1:8000/home/api/login/', params={
+        response = requests.post('http://127.0.0.1:8000/home/api/login/', json={
     "username_or_email": "erroruser",
     "password": "testpassword"
 })
@@ -35,7 +35,7 @@ class TestLogin(unittest.TestCase):
 })
 
     def test_login_failure_003(self):
-        response = requests.get('http://127.0.0.1:8000/home/api/login/', params={
+        response = requests.post('http://127.0.0.1:8000/home/api/login/', json={
     "username_or_email": "testuser",
 })
         self.assertEqual(response.status_code, 400)
@@ -45,7 +45,7 @@ class TestLogin(unittest.TestCase):
 })
 
     def test_login_failure_004(self):
-        response = requests.get('http://127.0.0.1:8000/home/api/login/', params={
+        response = requests.post('http://127.0.0.1:8000/home/api/login/', json={
     "username_or_email": "testuser",
     "password": "erro"
 })
