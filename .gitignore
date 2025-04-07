@@ -130,4 +130,5 @@ dmypy.json
 
 # 在文件末尾添加
 allure-results/  # Allure测试报告目录
-test-reports/  # 测试报告目录
+test-reports/  # 测试报告目录*.pyc
+venv/
