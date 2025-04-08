@@ -1,8 +1,3 @@
-以下是针对你的自动化接口测试平台项目的README优化方案，结合项目特性与行业最佳实践：
-
----
-
-### 一、项目标识与状态（置顶信息强化）
 # AutoTest 自动化接口测试平台
 
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/)
@@ -65,7 +60,7 @@ pip install -r requirements.txt
 # 初始化测试数据库
 python manage.py migrate
 
-## 测试用例管理
+# 测试用例管理
 准备Excel文件 在项目根目录创建Exceldata目录，按以下格式编写测试用例
 Excel文件格式规范：
 ![Excel测试用例格式示例](docs/images/excel-format.png)
@@ -83,13 +78,14 @@ Exceldata/
 # 执行以下命令生成测试代码
 python -m generate-tests --excel-dir Exceldata --output-dir testplatform/tests/unit
 
-#运行测试套件
+# 运行测试套件
 启动程序对当前所有的测试脚本程序进行测试
 pytest --alluredir=./allure-results
 
 使用命令启动allure查看测试报告
 allure serve ./allure-results
-测试报告样式
+
+# 测试报告样式
 ![Allure测试报告示例](docs/images/allure-report.png)
 
 ## 贡献指南
