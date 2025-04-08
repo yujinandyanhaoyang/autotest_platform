@@ -34,6 +34,7 @@
 ## 配置说明
 项目配置在autotest/settings.py中，主要包括数据库配置、中间件、应用等
 项目结构
+```
 autotest/
 ├── config/                 # Django配置
 │   ├── settings.py        # 测试环境配置
@@ -47,7 +48,7 @@ autotest/
 ├── Exceldata/             # 测试用例存储目录
 ├── manage.py              # Django管理入口
 └── pyproject.toml         # 依赖与打包配置
-
+```
 
 ## 快速开始
 ### 环境要求
@@ -72,15 +73,17 @@ Excel文件格式规范：
 |------------------|-------------|----------------------------------|--------------------|-------------------------------|--------|
 | login_success    | post        | http://localhost:8000/api/login | {"username": ...} | {"ret":0, "msg":"成功"}      | 200    |URL_ADDRESS | {"username": ...} | {"ret":0, "msg":"成功"}      | 200    |
 | login_failure    | post        | URL_ADDRESS| login_failure    | post        | http://localhost:8000/api/login | {"username":...} | {"ret":1, "msg":"失败"}      | 400    |
-
+```
 Exceldata/
 ├── test1cases.xlsx
 └── test2cases.xlsx
+```
 
 ## 生成测试代码
-执行以下命令生成测试代码
+# 执行以下命令生成测试代码
 python -m generate-tests --excel-dir Exceldata --output-dir testplatform/tests/unit
-运行测试套件
+
+#运行测试套件
 启动程序对当前所有的测试脚本程序进行测试
 pytest --alluredir=./allure-results
 
