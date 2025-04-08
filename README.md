@@ -50,18 +50,18 @@ autotest/
 - Python 3.8+
 - Django 4.2
 - pandas
-# 克隆仓库
+### 克隆仓库
 ```
 git clone https://github.com/yujinandyanhaoyang/autotest_platform.git
 cd autotest
 ```
 
-# 安装依赖
+### 安装依赖
 ```
 pip install -r requirements.txt
 ```
 
-# 测试用例管理
+## 测试用例管理
 准备Excel文件 在项目根目录创建Exceldata目录，按以下格式编写测试用例
 Excel文件格式规范：
 ![Excel测试用例格式示例](docs/images/excel-format.png)
@@ -69,7 +69,7 @@ Excel文件格式规范：
 |------------------|-------------|----------------------------------|--------------------|-------------------------------|--------|
 | login_success    | post        | http://localhost:8000/api/login | {"username": ...} | {"ret":0, "msg":"成功"}      | 200    |
 
-
+### 文件结构
 ```
 Exceldata/
 ├── test1cases.xlsx
@@ -77,23 +77,23 @@ Exceldata/
 ```
 
 ## 生成测试代码
-# 执行以下命令生成测试代码
+### 执行以下命令生成测试代码
 ```
 python -m generate-tests --excel-dir Exceldata --output-dir testplatform/tests/unit
 ```
 
-# 运行测试套件
+### 运行测试套件
 启动程序对当前所有的测试脚本程序进行测试
 ```
 pytest --alluredir=./allure-results
 ```
 
-使用命令启动allure查看测试报告
+### 使用命令启动allure查看测试报告
 ```
 allure serve ./allure-results
 ```
 
-# 测试报告样式
+### 测试报告样式
 ![Allure测试报告示例](docs/images/allure-report.png)
 
 ## 贡献指南
