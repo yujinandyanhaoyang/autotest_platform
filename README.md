@@ -51,14 +51,15 @@ autotest/
 - Django 4.2
 - pandas
 # 克隆仓库
+```
 git clone https://github.com/yujinandyanhaoyang/autotest_platform.git
 cd autotest
+```
 
 # 安装依赖
+```
 pip install -r requirements.txt
-
-# 初始化测试数据库
-python manage.py migrate
+```
 
 # 测试用例管理
 准备Excel文件 在项目根目录创建Exceldata目录，按以下格式编写测试用例
