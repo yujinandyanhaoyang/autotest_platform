@@ -66,8 +66,9 @@ Excel文件格式规范：
 ![Excel测试用例格式示例](docs/images/excel-format.png)
 | test_title       | test_method | url                              | test_data          | request_json                   | status |
 |------------------|-------------|----------------------------------|--------------------|-------------------------------|--------|
-| login_success    | post        | http://localhost:8000/api/login | {"username": ...} | {"ret":0, "msg":"成功"}      | 200    |URL_ADDRESS | {"username": ...} | {"ret":0, "msg":"成功"}      | 200    |
-| login_failure    | post        | URL_ADDRESS| login_failure    | post        | http://localhost:8000/api/login | {"username":...} | {"ret":1, "msg":"失败"}      | 400    |
+| login_success    | post        | http://localhost:8000/api/login | {"username": ...} | {"ret":0, "msg":"成功"}      | 200    |
+
+
 ```
 Exceldata/
 ├── test1cases.xlsx
@@ -76,19 +77,26 @@ Exceldata/
 
 ## 生成测试代码
 # 执行以下命令生成测试代码
+```
 python -m generate-tests --excel-dir Exceldata --output-dir testplatform/tests/unit
+```
 
 # 运行测试套件
 启动程序对当前所有的测试脚本程序进行测试
+```
 pytest --alluredir=./allure-results
+```
 
 使用命令启动allure查看测试报告
+```
 allure serve ./allure-results
+```
 
 # 测试报告样式
 ![Allure测试报告示例](docs/images/allure-report.png)
 
 ## 贡献指南
+```text
 问题反馈 提交Issue时请提供：
 测试用例Excel文件
 生成的测试代码片段
