@@ -1,12 +1,5 @@
 #!/usr/bin/env python
 # encoding: utf-8
-"""
-@version: python 3.6.3
-@author: wsy
-@software: PyCharm
-@file: signtype.py
-@time: 2018/1/30 10:36
-"""
 import hashlib
 
 def get_sign(sign_type, data, private_key):
