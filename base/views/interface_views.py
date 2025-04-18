@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render
 from base.models import Interface, Project
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
@@ -31,8 +33,13 @@ def interface_add(request):
 
 def interface_update(request):
     print('已经接收到请求，开始更新')
-    print(f'请求方法是{request.method},具体的参数信息是{request.GET.get("if_id")}')
     if request.method == 'POST':
+        print(f'请求方法是{request.method},\n')
+        print(f'具体prj_id的参数信息是{request.POST["prj_id"]}')
+        print(f'具体url的参数信息是{request.POST["url"]}')
+        print(f'具体data_type的参数信息是{request.POST["data_type"]}')
+        print(f'具体if_name的参数信息是{request.POST["if_name"]}')
+        print(f'具体if_id的参数信息是{request.POST["if_id"]}')
 
         if_id = request.POST['if_id']
         if_name = request.POST['if_name']
@@ -53,11 +60,35 @@ def interface_update(request):
                                               response_header_param=response_header_data,
                                               response_body_param=response_body_data)
         return HttpResponseRedirect("/base/interface/")
+    print(f'请求方法是{request.method},具体的参数信息是{request.GET.get("if_id")}')
     print(f'先跳转表单页面更新数据，完成数据更新后使用POST方法提交新的表单')
     if_id = request.GET['if_id']
     if_info = Interface.objects.get(if_id=if_id)
     prj_list = Project.objects.all()
-    return render(request, "base/interface/update.html", {"if_info": if_info, "prj_list": prj_list})
+    # print(f'所属项目列表：{prj_list}，索引到的表格:{if_info}')
+    # print(f'表格中的具体参数{if_info.request_header_param}')
+    print(f'表格中if_info.response_body_param的具体参数{if_info.response_body_param}')
+    print(f'表格中if_info.if_id的具体参数{if_info.if_id}')
+
+    # 解析四个字段
+    request_header = parse_json_field(if_info.request_header_param)
+    request_body = parse_json_field(if_info.request_body_param)
+    response_body = parse_json_field(if_info.response_body_param)
+    response_head = parse_json_field(if_info.response_header_param)
+    return render(request, "base/interface/update.html", {
+        "if_info": if_info,
+        "prj_list": prj_list,
+        "request_header": request_header,
+        "request_body": request_body,
+        "response_body": response_body,
+        "response_head": response_head
+    })
+# 定义通用的解析函数将数据列表转成json格式
+def parse_json_field(json_str):
+    try:
+        return json.loads(json_str)
+    except json.JSONDecodeError:
+        return []
 
 def interface_delete(request):
     if request.method == 'GET':

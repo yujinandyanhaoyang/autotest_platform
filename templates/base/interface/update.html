@@ -22,6 +22,15 @@
 {% endblock %}
 
 {% block body %}
+  <!--检查if -->
+<div class="form-group">
+    <label class="col-sm-2 control-label">我在检查if_id</label>
+    <div class="col-sm-8">
+        <!-- 填充接口名称 -->
+        <input type="text"  name="if_name" class="form-control" value="{{ if_info.if_id}}">
+    </div>
+</div>
+
 
 <div class="row">
     <div class="col-md-12">
@@ -35,7 +44,7 @@
                         <label class="col-sm-2 control-label">接口名称</label>
                         <div class="col-sm-8">
                             <!-- 填充接口名称 -->
-                            <input type="text"  name="if_name" class="form-control" value="{{ if.if_name }}">
+                            <input type="text"  name="if_name" class="form-control" value="{{ if_info.if_name }}">
                         </div>
                     </div>
                     <div class="form-group">
@@ -53,7 +62,7 @@
                         <label class="col-sm-2 control-label">URL</label>
                         <div class="col-sm-8">
                             <!-- 填充接口 URL -->
-                            <input type="text" id="url" name="url" class="form-control" value="{{ if.url }}">
+                            <input type="text" id="url" name="url" class="form-control" value="{{ if_info.url }}">
                         </div>
                     </div>
                     <div class="form-group">
@@ -61,13 +70,13 @@
                         <div class="col-sm-1 control-label">
                             <label class="fancy-radio">
                                 <!-- 选中当前接口的请求方式 -->
-                                <input name="method" value="get" type="radio" {% if interface.method == 'get' %}checked{% endif %}><span><i></i>get</span>
+                                <input name="method" value="get" type="radio" {% if if_info.method == 'get' %}checked{% endif %}><span><i></i>get</span>
                             </label>
                         </div>
                         <div class="col-sm-1 control-label">
                             <label class="fancy-radio">
                                 <!-- 选中当前接口的请求方式 -->
-                                <input name="method" value="post" type="radio" {% if interface.method == 'post' %}checked{% endif %}><span><i></i>post</span>
+                                <input name="method" value="post" type="radio" {% if if_info.method == 'post' %}checked{% endif %}><span><i></i>post</span>
                             </label>
                         </div>
                     </div>
@@ -75,8 +84,8 @@
                         <label class="col-sm-2 control-label">数据传输方式</label>
                         <div class="col-sm-8">
                             <select type="text" id="data_type" class="form-control">
-                                <option value='json' {% if interface.data_type == 'json' %}selected{% endif %}>json</option>
-                                <option value='data' {% if interface.data_type == 'data' %}selected{% endif %}>data</option>
+                                <option value='json' {% if if_info.data_type == 'json' %}selected{% endif %}>json</option>
+                                <option value='data' {% if if_info.data_type == 'data' %}selected{% endif %}>data</option>
                             </select>
                         </div>
                     </div>
@@ -85,13 +94,13 @@
                         <div class="col-sm-1 control-label">
                             <label class="fancy-radio">
                                 <!-- 选中当前接口的签名状态 -->
-                                <input name="is_sign" value="1" type="radio" {% if if.is_sign == 1 %}checked{% endif %}><span><i></i>签名</span>
+                                <input name="is_sign" value="1" type="radio" {% if if_info.is_sign == 1 %}checked{% endif %}><span><i></i>签名</span>
                             </label>
                         </div>
                         <div class="col-sm-2 control-label">
                             <label class="fancy-radio">
                                 <!-- 选中当前接口的签名状态 -->
-                                <input name="is_sign" value="0" type="radio" {% if if.is_sign == 0 %}checked{% endif %}><span><i></i>不签名</span>
+                                <input name="is_sign" value="0" type="radio" {% if if_info.is_sign == 0 %}checked{% endif %}><span><i></i>不签名</span>
                             </label>
                         </div>
                     </div>
@@ -99,9 +108,14 @@
                         <label class="col-sm-2 control-label">接口描述</label>
                         <div class="col-sm-8">
                             <!-- 填充接口描述 -->
-                            <textarea name="description" placeholder="请输入内容" class="form-control" rows="3">{{ if.description }}</textarea>
+                            <textarea name="description" placeholder="请输入内容" class="form-control" rows="3">{{ if_info.description }}</textarea>
                         </div>
                     </div>
+
+
+
+
+                    <!-- 请求头表格 -->
                     <div class="form-group">
                         <label class="col-sm-2 control-label">请求header</label>
                         <div class="col-sm-8">
@@ -110,20 +124,32 @@
                             </button>
                         </div>
                         <div class="col-sm-offset-2 col-sm-8">
-                            <table id="request_header" class="table col-sm-10" id="request_header_table">
+                            <table id="request_header" class="table col-sm-10">
                                 <thead>
-                                <tr>
-                                    <th>头部标签</th>
-                                    <th>备注</th>
-                                    <th></th>
-                                </tr>
+                                    <tr>
+                                        <th>头部标签</th>
+                                        <th>备注</th>
+                                        <th></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
+                                    {% for header in request_header %}
+                                    <tr>
+                                        <td name='var_name' contenteditable='true'>{{ header.var_name }}</td>
+                                        <td name='var_remark' contenteditable='true'>{{ header.var_remark }}</td>
+                                        <td>
+                                            <button class='btn btn-danger' onclick='del_step(this)'>删除行</button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
+
+
+
+                    <!-- 请求体表格 -->
                     <div class="form-group">
                         <label class="col-sm-2 control-label">请求body</label>
                         <div class="col-sm-8">
@@ -134,40 +160,62 @@
                         <div class="col-sm-offset-2 col-sm-8">
                             <table id="request_body" class="table col-sm-10">
                                 <thead>
-                                <tr>
-                                    <th>参数名</th>
-                                    <th>备注</th>
-                                    <th></th>
-                                </tr>
+                                    <tr>
+                                        <th>参数名</th>
+                                        <th>备注</th>
+                                        <th></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
+                                    {% for header in response_head %}
+                                    <tr>
+                                        <td name='var_name' contenteditable='true'>{{ header.var_name }}</td>
+                                        <td name='var_remark' contenteditable='true'>{{ header.var_remark }}</td>
+                                        <td>
+                                            <button class='btn btn-danger' onclick='del_step(this)'>删除行</button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
+
+
+                    <!-- 响应头表格 -->
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">返回header</label>
+                        <label class="col-sm-2 control-label">响应header</label>
                         <div class="col-sm-8">
-                            <button id="add_response_header" class="btn btn-outline btn-primary" type="button"><i
+                            <button id="add_response_header" class="btn btn-primary" type="button"><i
                                     class="fa fa-plus-square-o"></i>&nbsp;添加行
                             </button>
                         </div>
                         <div class="col-sm-offset-2 col-sm-8">
                             <table id="response_header" class="table col-sm-10">
                                 <thead>
-                                <tr>
-                                    <th>头部标签</th>
-                                    <th>备注</th>
-                                    <th></th>
-                                </tr>
+                                    <tr>
+                                        <th>头部标签</th>
+                                        <th>备注</th>
+                                        <th></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
+                                    {% for header in response_head %}
+                                    <tr>
+                                        <td name='var_name' contenteditable='true'>{{ header.var_name }}</td>
+                                        <td name='var_remark' contenteditable='true'>{{ header.var_remark }}</td>
+                                        <td>
+                                            <button class='btn btn-danger' onclick='del_step(this)'>删除行</button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
+
+
+                    <!-- 响应体表格 -->
                     <div class="form-group">
                         <label class="col-sm-2 control-label">返回body</label>
                         <div class="col-sm-8">
@@ -178,19 +226,29 @@
                         <div class="col-sm-offset-2 col-sm-8">
                             <table id="response_body" class="table col-sm-10">
                                 <thead>
-                                <tr>
-                                    <th>参数名</th>
-                                    <th>备注</th>
-                                    <th></th>
-                                </tr>
+                                    <tr>
+                                        <th>参数名</th>
+                                        <th>备注</th>
+                                        <th></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
+                                    <!-- 遍历已有的响应体数据 -->
+                                    {% for body in response_body %}
+                                    <tr>
+                                        <td name='var_name' contenteditable='true'>{{ body.var_name }}</td>
+                                        <td name='var_remark' contenteditable='true'>{{ body.var_remark }}</td>
+                                        <td>
+                                            <button class='btn btn-danger' onclick='del_step(this)'>删除行</button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
 
+                    <!-- 保存按钮 -->
                     <div class="form-group">
                         <div class="col-sm-offset-4 col-sm-6">
                             <button id="sumbit" class="btn btn-primary">保存</button>
@@ -205,7 +263,6 @@
 {% endblock %}
 {% block javascript %}
 <script>
-
     function del_step(obj) {
         var tr = obj.parentNode.parentNode;
         var tbody = tr.parentNode;
@@ -213,104 +270,97 @@
     }
 
     $(document).ready(function () {
-        //添加请求头参数行
+        // 添加请求头参数行
         $("#add_request_header").click(function () {
-            var newRow = "<tr> <td name='var_name' contenteditable='true'></td><td name='var_remark' contenteditable='true'></td> <td> <button class='btn btn-danger' onclick='del_step(this)'>删除行</button> </td> </tr>";
+            var newRow = "<tr> <td name='var_name' contenteditable='true'></td>" +
+                "<td name='var_remark' contenteditable='true'></td> " +
+                "<td> <button class='btn btn-danger' onclick='del_step(this)'>删除行</button> </td> </tr>";
             $("#request_header tr:last").after(newRow);
         });
 
+        // 添加请求体参数行
         $("#add_request_body").click(function () {
-            var newRow = "<tr> <td name='var_name' contenteditable='true'></td><td name='var_remark' contenteditable='true'></td> <td> <button class='btn btn-danger' onclick='del_step(this)'>删除行</button> </td> </tr>";
+            var newRow = "<tr> <td name='var_name' contenteditable='true'></td>" +
+                "<td name='var_remark' contenteditable='true'></td> " +
+                "<td> <button class='btn btn-danger' onclick='del_step(this)'>删除行</button> </td> </tr>";
             $("#request_body tr:last").after(newRow);
         });
 
-        $("#add_response_header").click(function () {
-            var newRow = "<tr> <td name='var_name' contenteditable='true'></td><td name='var_remark' contenteditable='true'></td> <td> <button class='btn btn-danger' onclick='del_step(this)'>删除行</button> </td> </tr>";
-            $("#response_header tr:last").after(newRow);
-        });
-
+        // 添加响应体参数行
         $("#add_response_body").click(function () {
-            var newRow = "<tr> <td name='var_name' contenteditable='true'></td><td name='var_remark' contenteditable='true'></td> <td> <button class='btn btn-danger' onclick='del_step(this)'>删除行</button> </td> </tr>";
+            var newRow = "<tr> <td name='var_name' contenteditable='true'></td>" +
+                "<td name='var_remark' contenteditable='true'></td> " +
+                "<td> <button class='btn btn-danger' onclick='del_step(this)'>删除行</button> </td> </tr>";
             $("#response_body tr:last").after(newRow);
         });
 
-        // 删除行
-    });
-
-    $('#get_table_data').click(function () {
-        var args = {};
-        $('#request_header tr').each(function (i) {
-            if (i === 0) return true;
-            var data = {};
-            $(this).find("td[name]").each(function () {
-                var name = $(this).attr("name");
-                data[name] = $(this).text();
-            });
-            args[i] = data;
+        // 添加响应头参数行
+        $("#add_response_header").click(function () {
+            var newRow = "<tr> <td name='var_name' contenteditable='true'></td>" +
+                "<td name='var_remark' contenteditable='true'></td> " +
+                "<td> <button class='btn btn-danger' onclick='del_step(this)'>删除行</button> </td> </tr>";
+            $("#response_header tr:last").after(newRow);
         });
-        var send_data = JSON.stringify(args);
-        alert(send_data);
-    });
 
-    $('#sumbit').click(function () {
-        var if_name = $("#if_name").val();
-        var prj_id = $("#prj_id").val();
-        var url = $("#url").val();
-        var method = $("input[name='method']:checked").val();
-        var data_type = $("#data_type").val();
-        var is_sign = $("input[name='is_sign']:checked").val();
-        var description = $("textarea[name='description']").val();
+        $('#sumbit').click(function () {
+            // 收集接口基本信息
+            var if_id = "{{ if_info.if_id }}";
+            var if_name = $("#if_name").val();
+            var prj_id = $("#prj_id").val();
+            var url = $("#url").val();
+            var method = $("input[name='method']:checked").val();
+            var data_type = $("#data_type").val();
+            var is_sign = $("input[name='is_sign']:checked").val();
+            var description = $("textarea[name='description']").val();
 
-        var request_header_data;
-        var request_body_data;
-        var response_header_data;
-        var response_body_data;
-
-        function getTableData(tableId) {
-            var args = [];
-            $(tableId + ' tr').each(function (i) {
-                if (i === 0) return true;
-                var data = {};
-                $(this).find("td[name]").each(function () {
-                    var name = $(this).attr("name");
-                    data[name] = $(this).text();
+            function getTableData(tableId) {
+                var args = [];
+                $(tableId + ' tr').each(function (i) {
+                    if (i === 0) return true;
+                    var data = {};
+                    $(this).find("td[name]").each(function () {
+                        var name = $(this).attr("name");
+                        data[name] = $(this).text();
+                    });
+                    args.push(data);
                 });
-                args.push(data);
-            });
-            return JSON.stringify(args);
-        }
-
-        request_header_data = getTableData('#request_header');
-        request_body_data = getTableData('#request_body');
-        response_header_data = getTableData('#response_header');
-        response_body_data = getTableData('#response_body');
-
-        $.ajax({
-            // 修改为修改接口的后端地址
-            url: "/base/interface_update/",
-            type: "post",
-            data: {
-                "if_name": if_name,
-                "prj_id": prj_id,
-                "url": url,
-                "method": method,
-                "data_type": data_type,
-                "is_sign": is_sign,
-                "description": description,
-                "request_header_data": request_header_data,
-                "request_body_data": request_body_data,
-                "response_header_data": response_header_data,
-                "response_body_data": response_body_data,
-            },
-            success: function () {
-                alert("保存成功");
-                window.location.replace("/base/interface/");
-            },
-            error: function () {
-                alert("error!");
+                return JSON.stringify(args);
             }
+
+            // 收集表格数据
+            var request_header_data = getTableData('#request_header');
+            var request_body_data = getTableData('#request_body');
+            var response_header_data = getTableData('#response_header');
+            var response_body_data = getTableData('#response_body');
+
+            $.ajax({
+                url: "/base/interface_update/",
+                type: "post",
+                data: {
+                    "if_id": if_id,
+                    "if_name": if_name,
+                    "prj_id": prj_id,
+                    "url": url,
+                    "method": method,
+                    "data_type": data_type,
+                    "is_sign": is_sign,
+                    "description": description,
+                    "request_header_data": request_header_data,
+                    "request_body_data": request_body_data,
+                    "response_header_data": response_header_data,
+                    "response_body_data": response_body_data,
+                    // 防止 CSRF 攻击
+                    "csrfmiddlewaretoken": $('input[name=csrfmiddlewaretoken]').val()
+                },
+                success: function () {
+                    alert("保存成功");
+                    window.location.replace("/base/interface/");
+                },
+                error: function () {
+                    alert("error!");
+                }
+            });
         });
     });
-
 </script>
 {% endblock %}
