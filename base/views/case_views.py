@@ -27,3 +27,15 @@ def case_run(request):
         execute = Execute(case_id, env_id)
         case_result = execute.run_case()
         return JsonResponse(case_result)
+
+
+def  case_update(request):
+    print("目前不太重要，后续再补充")
+
+
+
+def case_delete(request):
+    if request.method == 'GET':
+        case_id = request.GET['case_id']
+        Case.objects.filter(case_id=case_id).delete()
+        return HttpResponseRedirect("/base/env/")

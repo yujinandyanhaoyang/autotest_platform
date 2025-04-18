@@ -59,3 +59,10 @@ def plan_run(request):
                             pass_num=pass_num, fail_num=fail_num, error_num=error_num)
             report.save()
         return HttpResponse(plan.plan_name + " 执行成功！")
+
+# 计划删除
+def plan_delete(request):
+    print("同时设计多个组件的删除功能，暂时不做")
+
+def plan_update(request):
+    print("表单比较复杂，暂时不做")

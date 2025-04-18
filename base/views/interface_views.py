@@ -38,11 +38,11 @@ def interface_update(request):
         print(f'具体prj_id的参数信息是{request.POST["prj_id"]}')
         print(f'具体url的参数信息是{request.POST["url"]}')
         print(f'具体data_type的参数信息是{request.POST["data_type"]}')
-        print(f'具体if_name的参数信息是{request.POST["if_name"]}')
+        # print(f'具体if_name的参数信息是{request.POST["if_name"]}')
         print(f'具体if_id的参数信息是{request.POST["if_id"]}')
 
         if_id = request.POST['if_id']
-        if_name = request.POST['if_name']
+        # if_name = request.POST['if_name']#暂不处理
         prj_id = request.POST['prj_id']
         url = request.POST['url']
         method = request.POST['method']
@@ -53,7 +53,7 @@ def interface_update(request):
         request_body_data = request.POST['request_body_data']
         response_header_data = request.POST['response_header_data']
         response_body_data = request.POST['response_body_data']
-        Interface.objects.filter(if_id=if_id).update(if_name=if_name, url=url, method=method, data_type=data_type,
+        Interface.objects.filter(if_id=if_id).update( url=url, method=method, data_type=data_type,
                                               is_sign=is_sign, description=description,prj_id=prj_id,
                                               request_header_param=request_header_data,
                                               request_body_param=request_body_data,

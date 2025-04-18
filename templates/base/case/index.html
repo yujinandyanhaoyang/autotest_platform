@@ -46,9 +46,13 @@
                         <td prj_id="{{ case.project.prj_id }}">{{ case.project }}</td>
                         <td>{{ case.description }}</td>
                         <td>
-                            <button class="#runCaseForm btn btn-primary" onclick="debug_button(this);" data-toggle="modal" data-target="#runCaseForm">运行</button>
-                            <a href="" class="">编辑</a>
-                            <a href="" class="">删除</a>
+                            <button class="#runCaseForm btn btn-primary" onclick="debug_button(this);
+                            " data-toggle="modal" data-target="#runCaseForm">运行</button>
+                            <a href="/base/case_update?case_id={{ case.case_id  }}" class="layui-btn layui-btn-xs"
+                               lay-event="edit">编辑</a>
+                            <a href="/base/case_delete?case_id={{ case.case_id  }}"
+                               class="layui-btn layui-btn-danger layui-btn-xs"
+                               lay-event="del">删除</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -160,4 +164,5 @@
             });
         };
     </script>
-    {% endblock %}
+
+{% endblock %}
