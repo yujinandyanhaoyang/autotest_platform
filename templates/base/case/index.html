@@ -26,6 +26,10 @@
         <div class="panel">
             <div class="panel-heading">
                 <a href="/base/case_add/" class="btn btn-primary">添加用例</a>
+                <!-- 添加文件输入框，设置为隐藏 -->
+                <input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display: none;">
+                <!-- 添加外部导入按钮 -->
+                <button class="btn btn-primary" onclick="openFileSelector()">外部导入</button>
             </div>
             <div class="panel-body">
                 <table class="table table-bordered">
@@ -110,6 +114,52 @@
 
     {% block javascript %}
     <script>
+        function openFileSelector() {
+        // 点击隐藏的文件输入框，打开文件选择器
+        document.getElementById('excelFileInput').click();
+    }
+
+    // 监听文件输入框的变化事件
+    document.getElementById('excelFileInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // 发送 POST 请求到 case_uplode 视图
+            fetch('/base/case_uplode/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    // 注意：这里不能设置 Content-Type，让浏览器自动处理
+                    // 'Content-Type': 'multipart/form-data',
+                    'X-CSRFToken': getCookie('csrftoken') // 获取 CSRF Token
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('文件上传失败');
+                }
+            })
+            .then(data => {
+                alert(data.msg);
+                // 可以在这里添加刷新页面或其他操作
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+        }
+    });
+            // 获取 CSRF Token 的函数
+        function getCookie(name) {
+            let value = "; " + document.cookie;
+            let parts = value.split("; " + name + "=");
+            if (parts.length === 2) return parts.pop().split(";").shift();
+        }
+
+
         function debug_button(obj) {
 
             var case_id = obj.parentNode.parentNode.children[0].innerText;

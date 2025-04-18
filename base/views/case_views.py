@@ -72,11 +72,11 @@ def case_uplode(request):
 
                 # 检查文件格式并收集有效用例
                 is_valid = processor.check_file_format()
-                print(f'文件格式检查结果：{is_valid}')
+                # print(f'文件格式检查结果：{is_valid}')
 
                 if is_valid:
                     # 保存用例到数据库
-                    print('开始将数据保存到数据库')
+                    # print('开始将数据保存到数据库')
                     processor.save_cases_to_db()
                     # 移动文件到目标目录
                     # 权限问题，暂时不删除临时文件
