@@ -14,7 +14,7 @@
                 <a class="this-page">接口管理</a>
             </li>
             <li class="active">
-                <a class="">添加接口</a>
+                <a class="">修改接口详情</a>
             </li>
         </ol>
     </div>
@@ -27,14 +27,15 @@
     <div class="col-md-12">
         <div class="panel">
             <div class="panel-heading">
-                <h3 class="panel-title">添加接口</h3>
+                <h3 class="panel-title">修改接口详情</h3>
             </div>
             <div class="panel-body">
                 <div class="form-horizontal">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">接口名称</label>
                         <div class="col-sm-8">
-                            <input type="text" id="if_name" name="if_name" class="form-control">
+                            <!-- 填充接口名称 -->
+                            <input type="text"  name="if_name" class="form-control" value="{{ if.if_name }}">
                         </div>
                     </div>
                     <div class="form-group">
@@ -42,7 +43,8 @@
                         <div class="col-sm-8">
                             <select type="text" id="prj_id" class="form-control">
                                 {% for prj in prj_list %}
-                                <option value={{ prj.prj_id }}>{{ prj.prj_name }}</option>
+                                <!-- 选中当前接口所属项目 -->
+                                <option value="{{ prj.prj_id }}" {% if prj.prj_id == if_info.project.prj_id %}selected{% endif %}>{{ prj.prj_name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -50,19 +52,22 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">URL</label>
                         <div class="col-sm-8">
-                            <input type="text" id="url" name="url" class="form-control">
+                            <!-- 填充接口 URL -->
+                            <input type="text" id="url" name="url" class="form-control" value="{{ if.url }}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">请求方式</label>
                         <div class="col-sm-1 control-label">
                             <label class="fancy-radio">
-                                <input name="method" value="get" type="radio"><span><i></i>get</span>
+                                <!-- 选中当前接口的请求方式 -->
+                                <input name="method" value="get" type="radio" {% if interface.method == 'get' %}checked{% endif %}><span><i></i>get</span>
                             </label>
                         </div>
                         <div class="col-sm-1 control-label">
                             <label class="fancy-radio">
-                                <input name="method" value="post" type="radio"><span><i></i>post</span>
+                                <!-- 选中当前接口的请求方式 -->
+                                <input name="method" value="post" type="radio" {% if interface.method == 'post' %}checked{% endif %}><span><i></i>post</span>
                             </label>
                         </div>
                     </div>
@@ -70,8 +75,8 @@
                         <label class="col-sm-2 control-label">数据传输方式</label>
                         <div class="col-sm-8">
                             <select type="text" id="data_type" class="form-control">
-                                <option value='json'>json</option>
-                                <option value='data'>data</option>
+                                <option value='json' {% if interface.data_type == 'json' %}selected{% endif %}>json</option>
+                                <option value='data' {% if interface.data_type == 'data' %}selected{% endif %}>data</option>
                             </select>
                         </div>
                     </div>
@@ -79,22 +84,24 @@
                         <label class="col-sm-2 control-label">是否签名</label>
                         <div class="col-sm-1 control-label">
                             <label class="fancy-radio">
-                                <input name="is_sign" value="1" type="radio"><span><i></i>签名</span>
+                                <!-- 选中当前接口的签名状态 -->
+                                <input name="is_sign" value="1" type="radio" {% if if.is_sign == 1 %}checked{% endif %}><span><i></i>签名</span>
                             </label>
                         </div>
                         <div class="col-sm-2 control-label">
                             <label class="fancy-radio">
-                                <input name="is_sign" value="0" type="radio"><span><i></i>不签名</span>
+                                <!-- 选中当前接口的签名状态 -->
+                                <input name="is_sign" value="0" type="radio" {% if if.is_sign == 0 %}checked{% endif %}><span><i></i>不签名</span>
                             </label>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">接口描述</label>
                         <div class="col-sm-8">
-                            <textarea name="description" placeholder="请输入内容" class="form-control" rows="3"></textarea>
+                            <!-- 填充接口描述 -->
+                            <textarea name="description" placeholder="请输入内容" class="form-control" rows="3">{{ if.description }}</textarea>
                         </div>
                     </div>
-
                     <div class="form-group">
                         <label class="col-sm-2 control-label">请求header</label>
                         <div class="col-sm-8">
@@ -183,6 +190,7 @@
                         </div>
 
                     </div>
+
                     <div class="form-group">
                         <div class="col-sm-offset-4 col-sm-6">
                             <button id="sumbit" class="btn btn-primary">保存</button>
@@ -226,28 +234,25 @@
             $("#response_body tr:last").after(newRow);
         });
 
-        //删除行
+        // 删除行
     });
 
     $('#get_table_data').click(function () {
-
-
         var args = {};
-        $('#request_header tr').each(function (i) {                   // 遍历 tr
-            if (i == 0) return true;
-            var data = new Object();
+        $('#request_header tr').each(function (i) {
+            if (i === 0) return true;
+            var data = {};
             $(this).find("td[name]").each(function () {
                 var name = $(this).attr("name");
                 data[name] = $(this).text();
             });
             args[i] = data;
         });
-        send_data = JSON.stringify(args);
+        var send_data = JSON.stringify(args);
         alert(send_data);
     });
 
     $('#sumbit').click(function () {
-
         var if_name = $("#if_name").val();
         var prj_id = $("#prj_id").val();
         var url = $("#url").val();
@@ -261,56 +266,28 @@
         var response_header_data;
         var response_body_data;
 
-        var args = [];
-        $('#request_header tr').each(function (i) {
-            if (i == 0) return true;
-            var data = new Object();
-            $(this).find("td[name]").each(function () {
-                var name = $(this).attr("name");
-                data[name] = $(this).text();
+        function getTableData(tableId) {
+            var args = [];
+            $(tableId + ' tr').each(function (i) {
+                if (i === 0) return true;
+                var data = {};
+                $(this).find("td[name]").each(function () {
+                    var name = $(this).attr("name");
+                    data[name] = $(this).text();
+                });
+                args.push(data);
             });
-            args.push(data);
-        });
-        request_header_data = JSON.stringify(args);
+            return JSON.stringify(args);
+        }
 
-        var args = [];
-        $('#request_body tr').each(function (i) {
-            if (i == 0) return true;
-            var data = new Object();
-            $(this).find("td[name]").each(function () {
-                var name = $(this).attr("name");
-                data[name] = $(this).text();
-            });
-            args.push(data);
-        });
-        request_body_data = JSON.stringify(args);
-
-        var args = [];
-        $('#request_header tr').each(function (i) {                   // 遍历 tr
-            if (i == 0) return true;
-            var data = new Object();
-            $(this).find("td[name]").each(function () {
-                var name = $(this).attr("name");
-                data[name] = $(this).text();
-            });
-            args.push(data);
-        });
-        response_header_data = JSON.stringify(args);
-
-        var args = [];
-        $('#request_header tr').each(function (i) {                   // 遍历 tr
-            if (i == 0) return true;
-            var data = new Object();
-            $(this).find("td[name]").each(function () {
-                var name = $(this).attr("name");
-                data[name] = $(this).text();
-            });
-            args.push(data);
-        });
-        response_body_data = JSON.stringify(args);
+        request_header_data = getTableData('#request_header');
+        request_body_data = getTableData('#request_body');
+        response_header_data = getTableData('#response_header');
+        response_body_data = getTableData('#response_body');
 
         $.ajax({
-            url: "/base/interface_add/",
+            // 修改为修改接口的后端地址
+            url: "/base/interface_update/",
             type: "post",
             data: {
                 "if_name": if_name,
@@ -325,8 +302,6 @@
                 "response_header_data": response_header_data,
                 "response_body_data": response_body_data,
             },
-            // dataType: "json",
-
             success: function () {
                 alert("保存成功");
                 window.location.replace("/base/interface/");
@@ -335,7 +310,6 @@
                 alert("error!");
             }
         });
-
     });
 
 </script>

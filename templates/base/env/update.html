@@ -21,14 +21,21 @@
                 <input name="env_id" value ={{env.env_id }} hidden>
                     <div class="layui-form-item">
                         <label class="layui-form-label">测试环境名称</label>
+
+
                         <div class="layui-input-block">
                             <input type="text" name="env_name" lay-verify="title" autocomplete="off" value={{ env.env_name }}
                                    class="layui-input">
                         </div>
+
+
+
                     </div>
 
                     <div class="layui-form-item">
                         <label class="layui-form-label">所属项目</label>
+
+
                         <div class="layui-input-block">
                             <select name="prj_id" lay-filter="aihao">
                                 <option value={{ env.project_id }}>{{ env.project }}</option>
@@ -37,12 +44,18 @@
                                 {% endfor %}
                             </select>
                         </div>
+
+
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">URL</label>
+
+
                         <div class="layui-input-block">
                             <input type="text" name="url" value={{ env.url }} class="layui-input">
                         </div>
+
+
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">密钥</label>

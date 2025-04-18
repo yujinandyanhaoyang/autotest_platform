@@ -22,7 +22,9 @@ def env_add(request):
     return render(request, "base/env/add.html", {"prj_list": prj_list})
 
 def env_update(request):
+    # print('环境更改函数已接收请求')
     if request.method == 'POST':
+        # print('正在修改')
         env_id = request.POST['env_id']
         env_name = request.POST['env_name']
         prj_id = request.POST['prj_id']
@@ -36,3 +38,10 @@ def env_update(request):
     env = Environment.objects.get(env_id=env_id)
     prj_list = Project.objects.all()
     return render(request, "base/env/update.html", {"env": env, "prj_list": prj_list})
+
+
+def env_delete(request):
+    if request.method == 'GET':
+        env_id = request.GET['env_id']
+        Environment.objects.filter(env_id=env_id).delete()
+        return HttpResponseRedirect("/base/env/")

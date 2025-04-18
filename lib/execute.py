@@ -34,13 +34,13 @@ class Execute():
 
     # 单条测试用例执行起点
     def run_case(self):
-        print(f'开始执行测试用例:{self.case_id}')
+        #print(f'开始执行测试用例:{self.case_id}')
         case = Case.objects.get(case_id=self.case_id)
         step_list = json.loads(case.content)
 
-        print(f'setep_list中的内容是{step_list}')
+        #print(f'setep_list中的内容是{step_list}')
         case_run = {"case_id": self.case_id, "case_name": case.case_name, "result": "pass"}
-        print(f'执行的是{case.case_name}，执行结果为:{case_run["result"]}')
+        #print(f'执行的是{case.case_name}，执行结果为:{case_run["result"]}')
         case_step_list = []
 
         for step in step_list:
@@ -81,7 +81,7 @@ class Execute():
             if_dict["body"] = get_sign(self.sign_type, if_dict["body"], self.private_key)
         # 合成请求，拼接环境的根地址+接口地址
         if_dict["url"] = self.env_url + interface.url
-        print(f'发送的完整地址{if_dict["url"]}\n')
+        #print(f'发送的完整地址{if_dict["url"]}\n')
         if_dict["if_id"] = if_id
         if_dict["if_name"] = step_content["if_name"]
         if_dict["method"] = interface.method

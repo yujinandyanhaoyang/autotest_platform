@@ -46,4 +46,4 @@ def project_delete(request):
     if request.method == 'GET':
         prj_id = request.GET['prj_id']
         Project.objects.filter(prj_id=prj_id).delete()
-        return HttpResponseRedirect("base/project/")
+        return HttpResponseRedirect("/base/project/")

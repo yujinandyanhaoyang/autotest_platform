@@ -17,9 +17,15 @@ Including another URLconf
 
 from django.urls import path
 
-from base.views import project_index, project_add, project_update, project_delete, sign_index, sign_add, sign_update, \
-    env_index, env_add, env_update, interface_add, interface_index, case_index, case_add, case_run, plan_index, \
+from base.views import project_index, project_add, project_update, project_delete, \
+    sign_index, sign_add, sign_update, \
+    env_index, env_add, env_update, \
+    interface_add, interface_index, \
+    case_index, case_add, case_run, \
+    plan_index, \
     plan_add, plan_run, report_index, findata
+from base.views.env_views import env_delete
+from base.views.interface_views import interface_update, interface_delete
 
 urlpatterns = [
     # 项目管理
@@ -37,10 +43,13 @@ urlpatterns = [
     path('env/', env_index),
     path('env_add/', env_add),
     path('env_update/', env_update),
+    path('env_delete/', env_delete),
 
     # 接口管理
     path('interface/', interface_index),
     path('interface_add/', interface_add),
+    path('interface_update/', interface_update),
+    path('interface_delete/', interface_delete),
 
     # 用例管理
     path('case/', case_index),

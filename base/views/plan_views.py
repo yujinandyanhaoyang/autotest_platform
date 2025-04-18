@@ -29,7 +29,7 @@ def plan_add(request):
 # 计划执行
 def plan_run(request):
     if request.method == 'POST':
-        print("使用的是POST方法，开始向目标接口发送请求")
+        #print("使用的是POST方法，开始向目标接口发送请求")
         plan_id = request.POST['plan_id']
         plan = Plan.objects.get(plan_id=plan_id)
         env_id = plan.environment.env_id
