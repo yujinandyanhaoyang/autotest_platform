@@ -24,7 +24,7 @@ from base.views import project_index, project_add, project_update, project_delet
     case_index, case_add, case_run, \
     plan_index, \
     plan_add, plan_run, report_index, findata
-from base.views.case_views import case_delete, case_update
+from base.views.case_views import case_delete, case_update, case_uplode
 from base.views.env_views import env_delete
 from base.views.interface_views import interface_update, interface_delete
 from base.views.plan_views import plan_delete, plan_update
@@ -59,6 +59,7 @@ urlpatterns = [
     path('case_run/', case_run),
     path('case_update/', case_update),
     path('case_delete/', case_delete),
+    path('case_uplode/', case_uplode),
 
     # 计划管理
     path('plan/', plan_index),
