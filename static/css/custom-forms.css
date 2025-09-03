@@ -1,0 +1,287 @@
+/* 腾讯风格的表单和页面布局样式 */
+/* 此文件扩展了之前的tencent-theme.css，增加了针对表单页面的额外样式 */
+
+/* 面包屑导航样式 */
+.breadcrumb-wrapper {
+    background-color: white;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+}
+
+.breadcrumb {
+    padding: 0;
+    margin-bottom: 0;
+    background: transparent;
+}
+
+.breadcrumb > li > a {
+    color: var(--tencent-text);
+}
+
+.breadcrumb > li > a:hover {
+    color: var(--tencent-blue);
+}
+
+.breadcrumb > li > a > i {
+    margin-right: 5px;
+    color: var(--tencent-blue);
+}
+
+.breadcrumb > .active > a {
+    color: var(--tencent-blue);
+}
+
+/* 表单元素样式 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    border-radius: 4px;
+    height: auto;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--tencent-blue);
+    box-shadow: 0 0 0 2px rgba(45, 140, 240, 0.2);
+}
+
+.input-group-addon {
+    background-color: #f8f8f9;
+    border-color: var(--tencent-border);
+    color: var(--tencent-blue);
+}
+
+.input-group .form-control:first-child,
+.input-group-addon:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.input-group .form-control:last-child,
+.input-group-addon:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* 表单帮助文本 */
+.form-text {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #999;
+}
+
+/* 面板标题样式 */
+.panel-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--tencent-text);
+}
+
+.panel-title > i {
+    margin-right: 5px;
+}
+
+/* 分隔线样式 */
+hr {
+    border-top: 1px solid var(--tencent-border);
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* 按钮样式增强 */
+.btn {
+    border-radius: 4px;
+    padding: 8px 15px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn i {
+    margin-right: 5px;
+}
+
+.btn-default {
+    background-color: #f8f8f9;
+    border-color: var(--tencent-border);
+    color: var(--tencent-text);
+}
+
+.btn-default:hover {
+    background-color: #e8e8e8;
+}
+
+/* 提示框样式 */
+.alert {
+    border-radius: 4px;
+    padding: 12px 15px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.alert-info {
+    background-color: #e8f4fd;
+    border-color: #bad4f5;
+    color: var(--tencent-blue);
+}
+
+.alert i {
+    margin-right: 5px;
+}
+
+/* 卡片样式增强 */
+.panel {
+    transition: all 0.3s ease;
+}
+
+.panel:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+/* 表单标签样式 */
+.control-label {
+    font-weight: 600;
+    color: #333;
+}
+
+/* 表格增强样式 */
+.table-responsive {
+    border: none;
+    margin-bottom: 0;
+}
+
+.table-hover > tbody > tr:hover {
+    background-color: rgba(45, 140, 240, 0.05);
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #fafafa;
+}
+
+.table > thead > tr > th {
+    background-color: #f3f3f3;
+    color: #333;
+    font-weight: 600;
+    border-bottom: 2px solid var(--tencent-blue);
+}
+
+.table > thead > tr > th i {
+    margin-right: 5px;
+    color: var(--tencent-blue);
+}
+
+/* 空状态样式 */
+.empty-state {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.empty-state-icon {
+    font-size: 48px;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+
+.empty-state h4 {
+    color: #666;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #999;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* 面板标题增强 */
+.panel-title-box {
+    float: left;
+}
+
+.panel-title-box h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.panel-title-box span {
+    display: block;
+    color: #999;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.panel-actions {
+    float: right;
+}
+
+/* 模态框样式 */
+.modal-content {
+    border-radius: 4px;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+    background-color: #fafafa;
+    border-bottom: 1px solid var(--tencent-border);
+    padding: 15px;
+}
+
+.modal-title {
+    font-weight: 600;
+}
+
+.modal-title i {
+    margin-right: 5px;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    background-color: #fafafa;
+    border-top: 1px solid var(--tencent-border);
+    padding: 15px;
+}
+
+/* 按钮组样式 */
+.btn-group .btn {
+    margin-right: 5px;
+}
+
+.btn-group .btn:last-child {
+    margin-right: 0;
+}
+
+/* 移动端适配 */
+@media (max-width: 767px) {
+    .control-label {
+        text-align: left;
+    }
+    
+    .form-horizontal .control-label {
+        padding-top: 0;
+        margin-bottom: 5px;
+    }
+    
+    .panel-title-box, .panel-actions {
+        float: none;
+        text-align: center;
+    }
+    
+    .panel-actions {
+        margin-top: 10px;
+    }
+    
+    .table-responsive {
+        border: 1px solid var(--tencent-border);
+    }
+}
