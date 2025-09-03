@@ -1,1 +1,123 @@
-{% extends "base.html" %}
+{% load static %}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <title>Autotest_platform</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- VENDOR CSS -->
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/linearicons/style.css' %}">
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/custom-theme.css' %}?v={% now 'U' %}">
+    <link rel="stylesheet" href="{% static 'css/custom-forms.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/custom-case.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/custom-styles.css' %}?v=3">
+    <!-- LOCAL FONTS -->
+    <!-- 使用系统字体替代Google Fonts -->
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; }
+    </style>
+    <!-- ICONS -->
+    <link rel="apple-touch-icon" sizes="76x76" href="{% static 'img/apple-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{% static 'img/favicon.png' %}">
+
+    {% block css %}{% endblock %}
+</head>
+
+<body>
+<!-- WRAPPER -->
+<div id="wrapper">
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="brand">
+            <a href="/">
+                <img src="{% static 'img/logo-dark.png' %}" alt="Autotest Logo" class="img-responsive logo" loading="lazy">
+                <span style="font-size: 20px; font-weight: 600; color: var(--primary-blue); vertical-align: middle;">Autotest Platform</span>
+            </a>
+        </div>
+        <div class="container-fluid">
+            <div class="navbar-btn">
+                <button type="button" class="btn-toggle-fullwidth">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+            <div id="navbar-menu">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="{% static 'img/user.png' %}" class="img-circle" alt="Avatar" loading="lazy">
+                            <span>管理员</span>
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"><i class="fa fa-user"></i> <span>个人信息</span></a></li>
+                            <li><a href="#"><i class="fa fa-envelope"></i> <span>消息</span></a></li>
+                            <li><a href="#"><i class="fa fa-cog"></i> <span>设置</span></a></li>
+                            <li><a href="#"><i class="fa fa-sign-out"></i> <span>退出</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="sidebar-nav" class="sidebar">
+        <div class="sidebar-scroll">
+            <nav>
+                <ul class="nav">
+                    <li><a href="/" class=""><i class="fa fa-home"></i> <span>主页</span></a></li>
+                    <li>
+                        <a href="#homeinfo" data-toggle="collapse" class="collapsed">
+                            <i class="fa fa-database"></i>
+                            <span>基础信息</span>
+                            <i class="icon-submenu fa fa-angle-right"></i>
+                        </a>
+                        <div id="homeinfo" class="collapse">
+                            <ul class="nav">
+                                <li><a href="/platformpage/project/" class="">项目管理</a></li>
+                                <li><a href="/platformpage/env/" class="">测试环境管理</a></li>
+                                <li><a href="/platformpage/interface/" class="">接口管理</a></li>
+                                <li><a href="/platformpage/case/" class="">用例管理</a></li>
+                                <li><a href="/platformpage/plan/" class="">测试计划管理</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="#system" data-toggle="collapse" class="collapsed">
+                            <i class="fa fa-cogs"></i>
+                            <span>系统设置</span>
+                            <i class="icon-submenu fa fa-angle-right"></i>
+                        </a>
+                        <div id="system" class="collapse">
+                            <ul class="nav">
+                                <li><a href="/platformpage/sign/" class="">签名方式</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!-- END LEFT SIDEBAR -->
+    <!-- MAIN -->
+    <div class="main">
+        <div class="main-content">
+            <div class="container-fluid">
+                {% block crumbs %}{% endblock %}
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'vendor/jquery-slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'scripts/klorofil-common.js' %}"></script>
+<script src="{% static 'scripts/custom-scripts.js' %}?v=1"></script>
+{% block javascript %}{% endblock %}
+</body>
+</html>

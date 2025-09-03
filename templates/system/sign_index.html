@@ -1,61 +1,114 @@
-{% extends "../base.html" %}
+{% extends "../index.html" %}
 
 {% block crumbs %}
-    <div class="row">
-        <div class="col-md-12">
+<div class="row">
+    <div class="col-md-12">
+        <nav class="breadcrumb-wrapper">
             <ol class="breadcrumb">
                 <li>
-                    <a href="/index">主页</a>
+                    <a href="/index"><i class="fa fa-home"></i> 主页</a>
+                </li>
+                <li>
+                    <a class="this"><i class="fa fa-cogs"></i> 系统设置</a>
                 </li>
                 <li class="active">
-                    <a class="this">系统设置</a>
-                </li>
-                <li class="active">
-                    <a class="this-page">签名方式</a>
+                    <a class="this-page"><i class="fa fa-certificate"></i> 签名方式</a>
                 </li>
             </ol>
-
-        </div>
+        </nav>
     </div>
+</div>
 {% endblock %}
 
 {% block body %}
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel">
-                <div class="panel-heading">
-                   <a href="/base/sign_add" class="btn btn-primary">添加</a>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-heading">
+                <div class="panel-title-box">
+                    <h3 class="panel-title"><i class="fa fa-certificate text-primary"></i> 签名方式管理</h3>
+                    <span>管理系统中使用的所有签名方式</span>
                 </div>
-                <div class="panel-body">
-                    <table class="table table-bordered">
+                <div class="panel-actions">
+                    <a href="/platformpage/sign_add" class="btn btn-primary">
+                        <i class="fa fa-plus"></i> 添加签名方式
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                {% if sign_list and sign_list|length > 0 %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
                         <thead>
-                        <tr>
-                    <th>ID</th>
-                    <th>名称</th>
-                    <th>描述</th>
-                    <th>操作</th>
-                </tr>
+                            <tr>
+                                <th width="10%"><i class="fa fa-hashtag"></i> ID</th>
+                                <th width="20%"><i class="fa fa-tag"></i> 名称</th>
+                                <th width="50%"><i class="fa fa-file-text-o"></i> 描述</th>
+                                <th width="20%"><i class="fa fa-cog"></i> 操作</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        {% for sign in sign_list %}
-                    <tr>
-                        <td>{{ sign.sign_id }}</td>
-                        <td>{{ sign.sign_name }}</td>
-                        <td>{{ sign.description }}</td>
-                        <td>
-                            <a href="/sign_update?sign_id={{ sign.sign_id }}" class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-                            <a href="/sign_delete?sign_id={{ sign.sign_id }}" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-                        </td>
-                    </tr>
-                {% endfor %}
+                            {% for sign in sign_list %}
+                            <tr>
+                                <td>{{ sign.sign_id }}</td>
+                                <td>{{ sign.sign_name }}</td>
+                                <td>{{ sign.description|default:"暂无描述" }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="/sign_update?sign_id={{ sign.sign_id }}" class="btn btn-sm btn-info">
+                                            <i class="fa fa-edit"></i> 编辑
+                                        </a>
+                                        <a href="javascript:void(0);" onclick="confirmDelete({{ sign.sign_id }})" class="btn btn-sm btn-danger">
+                                            <i class="fa fa-trash"></i> 删除
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fa fa-info-circle"></i>
+                    </div>
+                    <h4>暂无数据</h4>
+                    <p>您还没有添加任何签名方式，点击上方"添加签名方式"按钮开始创建。</p>
+                </div>
+                {% endif %}
             </div>
-
         </div>
     </div>
+</div>
 
+<!-- 删除确认模态框 -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="deleteModalLabel"><i class="fa fa-exclamation-triangle text-warning"></i> 确认删除</h4>
+            </div>
+            <div class="modal-body">
+                <p>您确定要删除这个签名方式吗？此操作不可逆。</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> 取消</button>
+                <a id="confirmDeleteBtn" href="#" class="btn btn-danger"><i class="fa fa-trash"></i> 确认删除</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
+
+{% block javascript %}
+<script>
+    function confirmDelete(signId) {
+        document.getElementById('confirmDeleteBtn').href = '/sign_delete?sign_id=' + signId;
+        $('#deleteModal').modal('show');
+    }
+</script>
+{% endblock %}
+

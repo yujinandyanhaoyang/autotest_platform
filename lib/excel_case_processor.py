@@ -1,10 +1,8 @@
 import os
 import time
-
 import pandas as pd
-from base.models import Case, Project, Interface
+from platformpage.models import Project, Environment, Case, Interface
 import json
-import numpy as np
 
 class ExcelCaseProcessor:
     def __init__(self, temp_file_path, settings):

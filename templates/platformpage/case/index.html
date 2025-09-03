@@ -1,0 +1,274 @@
+{% extends "../../index.html" %}
+
+{% block crumbs %}
+<div class="row">
+    <div class="col-md-12">
+        <nav class="breadcrumb-wrapper">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/index"><i class="fa fa-home"></i> 主页</a>
+                </li>
+                <li>
+                    <a class="this"><i class="fa fa-database"></i> 基础信息</a>
+                </li>
+                <li class="active">
+                    <a class="this-page"><i class="fa fa-file-code-o"></i> 用例管理</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel case-panel">
+            <div class="panel-heading">
+                <div class="panel-title-box">
+                    <h3 class="panel-title"><i class="fa fa-file-code-o text-primary"></i> 测试用例列表</h3>
+                    <span>管理系统中的所有测试用例</span>
+                </div>
+                <div class="panel-actions">
+                    <a href="/platformpage/case_add/" class="btn btn-primary">
+                        <i class="fa fa-plus"></i> 添加用例
+                    </a>
+                    <!-- 添加文件输入框，设置为隐藏 -->
+                    <input type="file" id="excelFileInput" accept=".xlsx,.xls" style="display: none;">
+                    <!-- 添加外部导入按钮 -->
+                    <button type="button" class="btn btn-success import-btn" onclick="openFileSelector()">
+                        <i class="fa fa-upload"></i> 外部导入
+                    </button>
+                </div>
+            </div>
+            <div class="panel-body">
+                {% if case_list and case_list|length > 0 %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped case-list">
+                        <thead>
+                        <tr>
+                            <th width="5%"><i class="fa fa-hashtag"></i> ID</th>
+                            <th width="20%"><i class="fa fa-tag"></i> 用例名称</th>
+                            <th width="15%"><i class="fa fa-folder-open"></i> 所属项目</th>
+                            <th width="35%"><i class="fa fa-file-text-o"></i> 描述</th>
+                            <th width="25%"><i class="fa fa-cog"></i> 操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for case in case_list %}
+                        <tr>
+                            <td>{{ case.case_id }}</td>
+                            <td>{{ case.case_name }}</td>
+                            <td prj_id="{{ case.project.prj_id }}">{{ case.project }}</td>
+                            <td class="case-description">{{ case.description|default:"暂无描述" }}</td>
+                            <td class="action-buttons">
+                                <button class="btn btn-sm btn-primary" onclick="debug_button(this);" data-toggle="modal" data-target="#runCaseForm">
+                                    <i class="fa fa-play"></i> 运行
+                                </button>
+                                <a href="/platformpage/case_update?case_id={{ case.case_id }}" class="btn btn-sm btn-info">
+                                    <i class="fa fa-edit"></i> 编辑
+                                </a>
+                                <a href="javascript:void(0);" class="btn btn-sm btn-danger delete-case-btn" data-case-id="{{ case.case_id }}">
+                                    <i class="fa fa-trash"></i> 删除
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fa fa-file-code-o"></i>
+                    </div>
+                    <h4>暂无测试用例</h4>
+                    <p>您还没有添加任何测试用例，点击上方"添加用例"按钮开始创建。</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 运行用例模态框 -->
+<div class="modal fade run-modal" id="runCaseForm" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h4 class="modal-title"><i class="fa fa-play-circle"></i> 用例运行</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal" method="post" action="">
+                    <div class="form-group">
+                        <input type="hidden" id="debug_case_id" name="case_id">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">测试环境</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-server"></i></span>
+                                <select class="form-control" id="debug_env_id" name="env_id">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">返回结果</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-terminal"></i></span>
+                                <textarea class="form-control" id="run_return_parameter" 
+                                          name="run_return_parameter" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancel_run" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times"></i> 取消
+                </button>
+                <button type="button" onclick="run_button()" class="btn btn-primary">
+                    <i class="fa fa-play"></i> 调试
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 删除确认模态框 -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="deleteModalLabel"><i class="fa fa-exclamation-triangle text-warning"></i> 确认删除</h4>
+            </div>
+            <div class="modal-body">
+                <p>您确定要删除这个测试用例吗？此操作不可逆。</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> 取消</button>
+                <a id="confirmDeleteBtn" href="#" class="btn btn-danger"><i class="fa fa-trash"></i> 确认删除</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+    function openFileSelector() {
+        document.getElementById('excelFileInput').click();
+    }
+    
+    function confirmDelete(caseId) {
+        document.getElementById('confirmDeleteBtn').href = '/platformpage/case_delete?case_id=' + caseId;
+        $('#deleteModal').modal('show');
+    }
+    
+    // 使用事件委托处理删除按钮点击
+    $(document).on('click', '.delete-case-btn', function(e) {
+        e.preventDefault();
+        var caseId = $(this).data('case-id');
+        confirmDelete(caseId);
+    });
+    
+    function debug_button(obj) {
+        var case_id = obj.parentNode.parentNode.children[0].innerText;
+        var prj_id = obj.parentNode.parentNode.children[2].getAttribute("prj_id");
+        $("#debug_case_id").val(case_id);
+        $("#cancel_run").html("取消");
+        $("#cancel_run").attr("class", "btn btn-default");
+        $("#run_return_parameter").val('');
+
+        $.ajax({
+            type: "get",
+            url: "/platformpage/findata/",
+            data: {
+                "prj_id": prj_id,
+                "type": "get_env_by_prj_id"
+            },
+            success: function (data) {
+                var listdata = eval(data);
+                $("#debug_env_id").empty();
+                $(listdata).each(function (i, item) {
+                    $("#debug_env_id").append("<option value=" + item.env_id + ">" + item.env_name + "</option>");
+                });
+            },
+            error: function () {
+                alert("获取测试环境失败！");
+            }
+        });
+    }
+
+    function run_button() {
+        $.ajax({
+            type: 'post',
+            url: "/platformpage/case_run/",
+            data: {
+                "case_id": $("#debug_case_id").val(),
+                "env_id": $("#debug_env_id").val(),
+            },
+            success: function (res) {
+                $("#run_return_parameter").val(JSON.stringify(res));
+                $("#cancel_run").html("完成");
+                $("#cancel_run").attr("class", "btn btn-primary");
+            },
+            error: function () {
+                $("#run_return_parameter").val("调用接口失败!!!");
+                $("#cancel_run").html("完成");
+                $("#cancel_run").attr("class", "btn btn-danger");
+            }
+        });
+    }
+    
+    // 获取 CSRF Token 的函数
+    function getCookie(name) {
+        let value = "; " + document.cookie;
+        let parts = value.split("; " + name + "=");
+        if (parts.length === 2) return parts.pop().split(";").shift();
+    }
+    
+    // 文件上传处理
+    document.getElementById('excelFileInput').addEventListener('change', function(e) {
+        var file = e.target.files[0];
+        if (file) {
+            var formData = new FormData();
+            formData.append('file', file);
+            
+            // 发送 POST 请求到 case_uplode 视图
+            fetch('/platformpage/case_uplode/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken') // 获取 CSRF Token
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('文件上传失败');
+                }
+            })
+            .then(data => {
+                alert(data.msg);
+                // 可以在这里添加刷新页面或其他操作
+                if (data.success) {
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+        }
+    });
+</script>
+{% endblock %}
+

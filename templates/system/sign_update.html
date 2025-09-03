@@ -1,47 +1,78 @@
-{% extends "../base.html" %}
+{% extends "../index.html" %}
+
+{% block crumbs %}
+<div class="row">
+    <div class="col-md-12">
+        <nav class="breadcrumb-wrapper">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/index"><i class="fa fa-home"></i> 主页</a>
+                </li>
+                <li>
+                    <a class="this"><i class="fa fa-cogs"></i> 系统设置</a>
+                </li>
+                <li>
+                    <a class="this-page" href="/platformpage/sign/"><i class="fa fa-certificate"></i> 签名方式</a>
+                </li>
+                <li class="active">
+                    <a><i class="fa fa-edit"></i> 编辑签名方式</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
+{% endblock %}
 
 {% block body %}
-
-    <div class="layui-body">
-        <!-- 内容主体区域 -->
-        <div style="padding: 15px;">
-            <span class="layui-breadcrumb">
-                <a href="">首页</a>
-                <a class="this" href="">系统设置</a>
-                <a class="this-page" href="">加密方式</a>
-                <a><cite>编辑</cite></a>
-            </span>
-        </div>
-        <div class="layui-row">
-            <div class="layui-col-md8 layui-col-md-offset1">
-                <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                    <legend>编辑加密方式</legend>
-                </fieldset>
-                <form class="layui-form" action="/base/sign_update/" method="post">
-                    <input name="sign_id" value ={{sign.sign_id }} hidden>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">加密方式名称</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="sign_name" value={{ sign.sign_name }} lay-verify="title" autocomplete="off" class="layui-input">
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="fa fa-edit text-primary"></i> 编辑签名方式
+                </h3>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal" method="post" action="/platformpage/sign_update/">
+                    {% csrf_token %}
+                    <input name="sign_id" value="{{ sign.sign_id }}" type="hidden">
+                    
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">签名方式名称</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-tag"></i></span>
+                                <input type="text" name="sign_name" value="{{ sign.sign_name }}" class="form-control" required>
+                            </div>
                         </div>
                     </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">加密方式描述</label>
-                        <div class="layui-input-block">
-                            <textarea name="description"  class="layui-textarea">{{ sign.description }}</textarea>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">签名方式描述</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-file-text-o"></i></span>
+                                <textarea name="description" class="form-control" rows="3">{{ sign.description }}</textarea>
+                            </div>
+                            <small class="form-text text-muted mt-2">简要描述该签名方式的用途和特点</small>
                         </div>
                     </div>
-                    <div class="layui-form-item">
-                        <div class="layui-input-block">
-                            <button class="layui-btn" lay-submit="" lay-filter="demo1">保存</button>
-                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    
+                    <hr>
+                    
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-6">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-save"></i> 保存修改
+                            </button>
+                            <a href="/platformpage/sign/" class="btn btn-default">
+                                <i class="fa fa-reply"></i> 返回
+                            </a>
                         </div>
                     </div>
                 </form>
             </div>
-
         </div>
-
     </div>
-
+</div>
 {% endblock %}

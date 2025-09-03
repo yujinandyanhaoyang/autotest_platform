@@ -1,0 +1,126 @@
+# Django 项目忽略文件
+
+# 字节码文件
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django 相关
+*.log
+db.sqlite3
+db.sqlite3-journal
+media/
+
+# 项目特定的多余目录（已清理）
+base/
+EasyTest/
+fakedata/
+temp/
+
+# 静态文件收集目录
+staticfiles/
+collected_static/
+
+# Django 密钥和敏感配置
+.env
+local_settings.py
+secrets.py
+
+# IDE 和编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Python 虚拟环境
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# pip 相关
+pip-log.txt
+pip-delete-this-directory.txt
+
+# 单元测试 / 覆盖率报告
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# 文档构建
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# celery 任务队列
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath
+*.sage.py
+
+# dotenv
+.env
+
+# 项目特定
+download_report/*.pdf
+download_report/*.xlsx
+download_report/*.xls
+!download_report/test_PDF.pdf
+
+# 临时文件
+*.tmp
+*.temp
+temp/
+tmp/
+
+# 备份文件
+*.bak
+*.backup
+
+# 压缩文件
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Node.js (如果使用前端构建工具)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

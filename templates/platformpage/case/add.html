@@ -1,0 +1,523 @@
+{% extends "../../index.html" %}
+
+{% block crumbs %}
+<div class="row">
+    <div class="col-md-12">
+        <nav class="breadcrumb-wrapper">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="/index"><i class="fa fa-home"></i> 主页</a>
+                </li>
+                <li>
+                    <a class="this"><i class="fa fa-database"></i> 基础信息</a>
+                </li>
+                <li>
+                    <a class="this-page" href="/platformpage/case/"><i class="fa fa-file-code-o"></i> 用例管理</a>
+                </li>
+                <li class="active">
+                    <a class=""><i class="fa fa-plus-circle"></i> 添加用例</a>
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel case-panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <i class="fa fa-plus-circle text-primary"></i> 添加测试用例
+                </h3>
+            </div>
+            <div class="panel-body">
+                <div class="form-horizontal case-form">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">用例名称</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-tag"></i></span>
+                                <input type="text" id="case_name" class="form-control" placeholder="请输入用例名称" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">所属项目</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-folder-open"></i></span>
+                                <select id="prj_id" class="form-control" onchange="get_if()">
+                                    <option value="">请选择项目</option>
+                                    {% for prj in prj_list %}
+                                    <option value="{{ prj.prj_id }}">{{ prj.prj_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">用例描述</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-file-text-o"></i></span>
+                                <textarea id="description" placeholder="请输入用例描述" class="form-control" rows="3"></textarea>
+                            </div>
+                            <small class="form-text text-muted mt-2">简要描述该测试用例的用途和预期结果</small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">添加步骤</label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-link"></i></span>
+                                <select class="form-control" id="if_id" name="if_id">
+                                    <option value="">请选择接口</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <button id="add_interface" class="btn btn-primary" type="button">
+                                <i class="fa fa-plus"></i> 添加接口
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="case-list"></div>
+                    
+                    <hr>
+                    
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-6">
+                            <button type="submit" id="submit" class="btn btn-primary">
+                                <i class="fa fa-save"></i> 保存用例
+                            </button>
+                            <a href="/platformpage/case/" class="btn btn-default">
+                                <i class="fa fa-reply"></i> 返回
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    function del_interface(obj) {
+        var div = $(obj).closest('.interface-panel').parent();
+        $(div).slideUp(300, function() {
+            $(this).remove();
+        });
+    }
+
+    function del_step(obj) {
+        var tr = $(obj).closest('tr');
+        tr.fadeOut(300, function() {
+            tr.remove();
+        });
+    }
+
+    function add_header_row(obj) {
+        var panel = $(obj).closest('.panel-body');
+        var tbody = panel.find("table[name='header']").children('tbody');
+        var newRow = `
+            <tr> 
+                <td class="text-center">#</td>
+                <td name='var_name' contenteditable='true'></td>
+                <td name='var_value' contenteditable='true'></td> 
+                <td class="text-center"> 
+                    <button class='btn btn-xs btn-danger' type='button' onclick='del_step(this)'>
+                        <i class='fa fa-times'></i> 删除
+                    </button> 
+                </td> 
+            </tr>`;
+        $(tbody).append(newRow);
+    }
+
+    function add_body_row(obj) {
+        var panel = $(obj).closest('.panel-body');
+        var tbody = panel.find("table[name='body']").children('tbody');
+        var newRow = `
+            <tr> 
+                <td class="text-center">#</td>
+                <td name='var_name' contenteditable='true'></td>
+                <td name='var_value' contenteditable='true'></td> 
+                <td class="text-center"> 
+                    <button class='btn btn-xs btn-danger' type='button' onclick='del_step(this)'>
+                        <i class='fa fa-times'></i> 删除
+                    </button> 
+                </td> 
+            </tr>`;
+        $(tbody).append(newRow);
+    }
+
+    function add_extract_row(obj) {
+        var panel = $(obj).closest('.panel-body');
+        var tbody = panel.find("table[name='extract']").children('tbody');
+        var newRow = `
+            <tr> 
+                <td class="text-center">#</td>
+                <td name='var_name' contenteditable='true'></td>
+                <td class="text-center"> 
+                    <button class='btn btn-xs btn-danger' type='button' onclick='del_step(this)'>
+                        <i class='fa fa-times'></i> 删除
+                    </button> 
+                </td> 
+            </tr>`;
+        $(tbody).append(newRow);
+    }
+
+    function add_validators_row(obj) {
+        var panel = $(obj).closest('.panel-body');
+        var tbody = panel.find("table[name='validators']").children('tbody');
+        var newRow = `
+            <tr> 
+                <td class="text-center">#</td>
+                <td name='var_name' contenteditable='true'></td>
+                <td name='var_value' contenteditable='true'></td> 
+                <td class="text-center"> 
+                    <button class='btn btn-xs btn-danger' type='button' onclick='del_step(this)'>
+                        <i class='fa fa-times'></i> 删除
+                    </button> 
+                </td> 
+            </tr>`;
+        $(tbody).append(newRow);
+    }
+
+    function get_if() {
+        $("#if_id").empty();
+        var prj_id = $("#prj_id").val();
+        if (!prj_id) {
+            toastr.warning("请先选择项目");
+        } else {
+            $.ajax({
+                type: "get",
+                url: "/platformpage/findata/",
+                data: {
+                    "prj_id": prj_id,
+                    "type": "get_all_if_by_prj_id"
+                },
+                beforeSend: function() {
+                    $("#if_id").html('<option value="">加载中...</option>');
+                },
+                success: function (data) {
+                    $("#if_id").empty().append('<option value="">请选择接口</option>');
+                    var dataJson = eval(data);
+                    $.each(dataJson, function (i, item) {
+                        $("#if_id").append("<option value=" + item.if_id + ">" + item.if_name + "</option>");
+                    });
+                    toastr.success("接口加载成功");
+                },
+                error: function () {
+                    toastr.error("获取接口失败！");
+                }
+            });
+        }
+    }
+
+    $(document).ready(function () {
+        // 初始化 toastr 通知
+        toastr.options = {
+            "closeButton": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "3000"
+        };
+        
+        $("#add_interface").click(function () {
+            var if_id = $("#if_id").val();
+            if (!if_id) {
+                toastr.warning("请先选择接口");
+            } else {
+                $.ajax({
+                    url: "/platformpage/findata/",
+                    type: "get",
+                    data: {
+                        "if_id": if_id,
+                        "type": "get_if_by_if_id"
+                    },
+                    beforeSend: function() {
+                        $("#add_interface").prop("disabled", true).html('<i class="fa fa-spinner fa-spin"></i> 加载中...');
+                    },
+                    success: function (data) {
+                        var listdata = eval(data);
+                        $(listdata).each(function (i, item) {
+                            // 构造 header 表格
+                            var header_table = `
+                                <div class="param-table">
+                                    <h4 class="section-title"><i class="fa fa-header"></i> Header 参数</h4>
+                                    <table name="header" class="table table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th width="5%">#</th>
+                                                <th width="35%">参数名</th>
+                                                <th width="45%">值</th>
+                                                <th width="15%">操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+                            
+                            var headerParams = JSON.parse(item.request_header_param);
+                            if (headerParams && headerParams.length > 0) {
+                                $.each(headerParams, function (i, hItem) {
+                                    header_table += `
+                                        <tr>
+                                            <td class="text-center">${i+1}</td>
+                                            <td name="var_name">${hItem.var_name}</td>
+                                            <td contenteditable="true" name="var_value"></td>
+                                            <td class="text-center">
+                                                <button class="btn btn-xs btn-danger" type="button" onclick="del_step(this);">
+                                                    <i class="fa fa-times"></i> 删除
+                                                </button>
+                                            </td>
+                                        </tr>`;
+                                });
+                            }
+                            header_table += `
+                                        </tbody>
+                                    </table>
+                                </div>`;
+
+                            // 构造 body 表格
+                            var body_table = `
+                                <div class="param-table">
+                                    <h4 class="section-title"><i class="fa fa-list-alt"></i> Body 参数</h4>
+                                    <table name="body" class="table table-hover table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th width="5%">#</th>
+                                                <th width="35%">参数名</th>
+                                                <th width="45%">值</th>
+                                                <th width="15%">操作</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>`;
+                                        
+                            var bodyParams = JSON.parse(item.request_body_param);
+                            if (bodyParams && bodyParams.length > 0) {
+                                $.each(bodyParams, function (i, bItem) {
+                                    body_table += `
+                                        <tr>
+                                            <td class="text-center">${i+1}</td>
+                                            <td name="var_name">${bItem.var_name}</td>
+                                            <td contenteditable="true" name="var_value"></td>
+                                            <td class="text-center">
+                                                <button class="btn btn-xs btn-danger" type="button" onclick="del_step(this);">
+                                                    <i class="fa fa-times"></i> 删除
+                                                </button>
+                                            </td>
+                                        </tr>`;
+                                });
+                            }
+                            body_table += `
+                                        </tbody>
+                                    </table>
+                                </div>`;
+
+                            // 构造面板
+                            var newtable = `
+                                <div class="row">
+                                    <div class="col-sm-offset-1 col-sm-10">
+                                        <div class="interface-panel">
+                                            <div id="${item.if_id}" class="panel-heading">
+                                                <h3 class="panel-title"><i class="fa fa-link"></i> ${item.if_name}</h3>
+                                                <div class="right">
+                                                    <button type="button" class="btn-toggle-collapse">
+                                                        <i class="fa fa-chevron-up"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="step-buttons">
+                                                    <button onclick="add_header_row(this)" class="btn btn-sm btn-info">
+                                                        <i class="fa fa-plus"></i> 添加 Header 参数
+                                                    </button>
+                                                    <button onclick="add_body_row(this)" class="btn btn-sm btn-info">
+                                                        <i class="fa fa-plus"></i> 添加 Body 参数
+                                                    </button>
+                                                    <button onclick="add_extract_row(this)" class="btn btn-sm btn-info">
+                                                        <i class="fa fa-plus"></i> 添加提取参数
+                                                    </button>
+                                                    <button onclick="add_validators_row(this)" class="btn btn-sm btn-info">
+                                                        <i class="fa fa-plus"></i> 添加检查点
+                                                    </button>
+                                                    <button onclick="del_interface(this)" class="btn btn-sm btn-danger">
+                                                        <i class="fa fa-trash"></i> 删除本接口
+                                                    </button>
+                                                </div>
+                                                
+                                                ${header_table}
+                                                ${body_table}
+                                                
+                                                <div class="param-table">
+                                                    <h4 class="section-title"><i class="fa fa-filter"></i> 提取参数</h4>
+                                                    <table name="extract" class="table table-hover table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="5%">#</th>
+                                                                <th width="80%">参数名</th>
+                                                                <th width="15%">操作</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                    </table>
+                                                </div>
+                                                
+                                                <div class="param-table">
+                                                    <h4 class="section-title"><i class="fa fa-check-circle"></i> 检查点</h4>
+                                                    <table name="validators" class="table table-hover table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="5%">#</th>
+                                                                <th width="35%">参数名</th>
+                                                                <th width="45%">期望值</th>
+                                                                <th width="15%">操作</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`;
+
+                            $("#case-list").append(newtable);
+                            toastr.success("接口添加成功");
+                        });
+                    },
+                    error: function () {
+                        toastr.error("加载接口数据失败！");
+                    },
+                    complete: function() {
+                        $("#add_interface").prop("disabled", false).html('<i class="fa fa-plus"></i> 添加接口');
+                    }
+                });
+            }
+        });
+
+        // 折叠/展开面板功能
+        $(document).on('click', '.btn-toggle-collapse', function() {
+            var $this = $(this);
+            var panel = $this.closest('.interface-panel');
+            var panelBody = panel.find('.panel-body');
+            
+            if (panelBody.is(':visible')) {
+                panelBody.slideUp(300);
+                $this.find('i').removeClass('fa-chevron-up').addClass('fa-chevron-down');
+            } else {
+                panelBody.slideDown(300);
+                $this.find('i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+            }
+        });
+        
+        // 提交表单
+        $("#submit").click(function () {
+            var case_name = $("#case_name").val();
+            var prj_id = $("#prj_id").val();
+            var description = $("#description").val();
+            
+            // 验证必填字段
+            if (!case_name) {
+                toastr.error("请输入用例名称");
+                $("#case_name").focus();
+                return false;
+            }
+            
+            if (!prj_id) {
+                toastr.error("请选择所属项目");
+                $("#prj_id").focus();
+                return false;
+            }
+            
+            var content = [];
+            $(".interface-panel").each(function () {
+                var step = {};
+                var heading = $(this).find(".panel-heading");
+                step["if_id"] = heading.attr("id");
+                step["if_name"] = heading.find("h3").text().trim();
+
+                // 提取 header 数据
+                var headerData = {};
+                $(this).find("table[name='header'] tr:gt(0)").each(function () {
+                    var name = $(this).find("td[name='var_name']").text().trim();
+                    var value = $(this).find("td[name='var_value']").text().trim();
+                    if (name) {
+                        headerData[name] = value;
+                    }
+                });
+                step["header"] = headerData;
+
+                // 提取 body 数据
+                var bodyData = {};
+                $(this).find("table[name='body'] tr:gt(0)").each(function () {
+                    var name = $(this).find("td[name='var_name']").text().trim();
+                    var value = $(this).find("td[name='var_value']").text().trim();
+                    if (name) {
+                        bodyData[name] = value;
+                    }
+                });
+                step["body"] = bodyData;
+                
+                // 提取参数数据
+                var extractData = [];
+                $(this).find("table[name='extract'] tr:gt(0)").each(function () {
+                    var name = $(this).find("td[name='var_name']").text().trim();
+                    if (name) {
+                        extractData.push(name);
+                    }
+                });
+                step["extract"] = extractData;
+                
+                // 检查点数据
+                var validatorsData = {};
+                $(this).find("table[name='validators'] tr:gt(0)").each(function () {
+                    var name = $(this).find("td[name='var_name']").text().trim();
+                    var value = $(this).find("td[name='var_value']").text().trim();
+                    if (name) {
+                        validatorsData[name] = value;
+                    }
+                });
+                step["validators"] = validatorsData;
+
+                content.push(step);
+            });
+            
+            // 验证是否添加了接口
+            if (content.length === 0) {
+                toastr.error("请至少添加一个接口");
+                return false;
+            }
+
+            var content_json = JSON.stringify(content);
+            
+            // 显示加载状态
+            $("#submit").prop("disabled", true).html('<i class="fa fa-spinner fa-spin"></i> 保存中...');
+
+            $.ajax({
+                url: "/platformpage/case_add/",
+                type: "post",
+                data: {
+                    "case_name": case_name,
+                    "prj_id": prj_id,
+                    "description": description,
+                    "content": content_json
+                },
+                success: function () {
+                    toastr.success("用例保存成功");
+                    setTimeout(function() {
+                        window.location.replace("/platformpage/case/");
+                    }, 1000);
+                },
+                error: function () {
+                    toastr.error("保存失败，请重试！");
+                    $("#submit").prop("disabled", false).html('<i class="fa fa-save"></i> 保存用例');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
